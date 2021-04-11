@@ -8,14 +8,15 @@ import { addToDatabaseCart, getDatabaseCart } from '../../utilities/databaseMana
 import { Link } from 'react-router-dom';
 
 const Shop = () => {
+    const [search,setSearch] =useState(' ')
  
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
     useEffect(()=>{
-        fetch('https://rocky-forest-15689.herokuapp.com/products')
+        fetch('https://rocky-forest-15689.herokuapp.com/products?search='+search)
         .then(res=>res.json())
         .then(data => setProducts(data))
-    },[])
+    },[search])
     
     useEffect(()=>{
         const savedCart = getDatabaseCart();
@@ -31,6 +32,9 @@ const Shop = () => {
         .then(res => res.json())
         .then(data => setCart(data));
         }, [])
+        const handleSearch =event => {
+            setSearch(event.target.value);
+        }
         
 
     const handleAddProduct = (product) =>{
@@ -55,6 +59,9 @@ const Shop = () => {
     return (
         <div className="twin-container">
             <div className="product-container">
+                <div className="text-center mt-2">
+                <input type="text" onBlur={handleSearch} className="product-search text-center" placeholder="search"></input>
+                </div>
                 {
                     products.map(pd => <Product 
                         key={pd.key}
